@@ -1,0 +1,308 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #e6f0fa, #d9e8f5);
+  color: #2c3e50;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1rem 2rem 1rem;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  margin-top: 1rem; /* Reduced from 5rem to 1rem to match side padding */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
+  color: #1a5276;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #1a5276;
+  border-left: 6px solid #5dade2;
+  padding-left: 12px;
+  background: #f0f8ff;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.5rem 0;
+  justify-content: center;
+}
+
+.filters select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #5dade2;
+  border-radius: 8px;
+  background: #f0f8ff;
+  color: #2c3e50;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease;
+}
+
+.filters select:hover {
+  border-color: #3498db;
+}
+
+.flex-charts {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.flex-charts,
+#heatmap-map {
+  background: linear-gradient(to bottom, #f9fbfd, #f1f6fb);
+  border: 1px solid #d4e6f1;
+  border-radius: 10px;
+  padding: 0.5rem;
+  margin-top: 1rem;
+}
+
+.bar-chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-wrapper {
+  flex: 0 1 calc(50% - 0.75rem);
+  max-width: calc(50% - 0.75rem);
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.chart-box {
+  width: 100%;
+  min-height: 500px;
+  height: auto;
+  background: linear-gradient(to bottom, #ffffff, #f7fafc);
+  border: 1px solid #d4e6f1;
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+}
+
+.chart-box:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.chart-box.info-box {
+  height: 500px;
+  text-align: left;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #ffffff, #f7fafc);
+  border: 1px solid #d4e6f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  color: #34495e;
+}
+
+.scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+#bar-chart {
+  width: 100% !important;
+  min-width: 0;
+  height: 100% !important;
+}
+
+@media (max-width: 1200px) {
+  #bar-chart {
+    min-width: 0;
+  }
+}
+
+#pie-chart {
+  width: 100%;
+  height: 500px;
+}
+
+#heatmap-map {
+  width: 100%;
+  max-width: 1100px;
+  height: 40vw;
+  max-height: 480px;
+  border: 1px solid #d4e6f1;
+  margin: 0 auto;
+}
+
+/* Adjust heatmap height for better aspect ratio on large screens */
+@media (min-width: 901px) {
+  #heatmap-map {
+    height: 40vw;
+    max-height: 480px;
+  }
+}
+
+/* Small tablet and mobile heatmap scaling */
+@media (max-width: 768px) {
+  #heatmap-map {
+    height: 320px;
+    max-width: 100%;
+  }
+}
+
+/* Mobile breakpoint: stack chart + info */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .bar-chart-container {
+    flex-direction: column !important;
+  }
+
+  .chart-wrapper {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .chart-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .chart-box.info-box {
+    height: auto;
+    padding: 1rem;
+  }
+
+  .js-plotly-plot .modebar {
+    top: 100px !important;
+    right: 20px !important;
+    left: auto !important;
+  }
+
+  .heatmap-section {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .heatmap-section .filters {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .heatmap-section .filters select {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  #heatmap-map {
+    width: 100%;
+    max-width: none;
+    height: 400px;
+    margin: 0 auto;
+  }
+}
+
+/* Ensure side-by-side layout from 769px and above */
+@media (min-width: 769px) {
+  .bar-chart-container {
+    flex-wrap: nowrap !important;
+  }
+
+  .chart-wrapper {
+    flex: 0 1 calc(50% - 0.75rem) !important;
+    max-width: calc(50% - 0.75rem) !important;
+  }
+}
+
+/* Tablet-specific: match chart heights side-by-side */
+@media (min-width: 901px) {
+  .chart-box,
+  .chart-box.info-box {
+    height: 500px;
+  }
+
+  .scroll-wrapper {
+    height: 100%;
+  }
+}
+
+/* Ensure consistent heights between 769px and 900px */
+@media (min-width: 769px) and (max-width: 900px) {
+  .chart-box,
+  .chart-box.info-box {
+    height: 500px;
+  }
+
+  .scroll-wrapper {
+    height: calc(100% - 2rem);
+  }
+}
+
+/* General mid-size styles */
+@media (max-width: 900px) {
+  .filters {
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .filters select {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .chart-box {
+    height: auto;
+  }
+
+  .chart-box.info-box {
+    height: auto;
+  }
+}
+
+.js-plotly-plot .modebar {
+  right: 70px !important;
+  top: 30px !important;
+}
