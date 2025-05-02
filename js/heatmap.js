@@ -1,18 +1,22 @@
 import { loadCSV } from "./fetchData.js";
 
+// Global variables for storing data and map layers
 let observationData = [];
 let locationMap = new Map();
 let map, heatLayer;
 
 function createMap() {
+  // Initialize Leaflet map centered on Phoenix, AZ
   map = L.map("heatmap-map").setView([33.4484, -112.0740], 10);
 
+  // Add OpenStreetMap tile layer without attribution
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: false
   }).addTo(map);
 }
 
 function populateHeatmapDropdowns(data) {
+  // Extract unique species and years for dropdowns
   const speciesSet = new Set();
   const yearSet = new Set();
 
@@ -27,6 +31,7 @@ function populateHeatmapDropdowns(data) {
   const speciesSelect = document.getElementById("heatmap-species-select");
   const yearSelect = document.getElementById("heatmap-year-select");
 
+  // Populate species dropdown
   [...speciesSet].sort().forEach(species => {
     const opt = document.createElement("option");
     opt.value = species;
@@ -34,11 +39,13 @@ function populateHeatmapDropdowns(data) {
     speciesSelect.appendChild(opt);
   });
 
+  // Add "All Years" option to year dropdown
   const allYearsOption = document.createElement("option");
   allYearsOption.value = "all";
   allYearsOption.textContent = "All Years (2000–2024)";
   yearSelect.appendChild(allYearsOption);
 
+  // Populate year dropdown
   [...yearSet].sort().forEach(year => {
     const opt = document.createElement("option");
     opt.value = year;
@@ -48,6 +55,7 @@ function populateHeatmapDropdowns(data) {
 }
 
 function getGradientColor(value, min, max) {
+  // Calculate color gradient based on bird count intensity
   const percent = (value - min) / (max - min);
 
   if (percent <= 0.4) {
@@ -60,6 +68,7 @@ function getGradientColor(value, min, max) {
 }
 
 function interpolateColor(color1, color2, factor) {
+  // Interpolate between two colors for gradient effect
   const c1 = hexToRgb(color1);
   const c2 = hexToRgb(color2);
 
@@ -71,6 +80,7 @@ function interpolateColor(color1, color2, factor) {
 }
 
 function hexToRgb(hex) {
+  // Convert hex color to RGB format
   const stripped = hex.replace("#", "");
   return {
     r: parseInt(stripped.substring(0, 2), 16),
@@ -80,8 +90,10 @@ function hexToRgb(hex) {
 }
 
 function renderHeatmap(species, year) {
+  // Remove existing heatmap layer if present
   if (heatLayer) map.removeLayer(heatLayer);
 
+  // Filter data by species, year, and valid site code
   const filtered = observationData.filter(row => {
     let rowYear = NaN;
     if (row.survey_date) {
@@ -96,6 +108,7 @@ function renderHeatmap(species, year) {
     return isMatchingSpecies && isMatchingYear && hasSiteCode;
   });
 
+  // Aggregate bird counts by site
   const countMap = new Map();
 
   filtered.forEach(row => {
@@ -104,12 +117,14 @@ function renderHeatmap(species, year) {
     countMap.set(site, (countMap.get(site) || 0) + count);
   });
 
+  // Create new layer group for heatmap
   heatLayer = L.layerGroup();
 
   const counts = Array.from(countMap.values());
   const minCount = Math.min(...counts);
   const maxCount = Math.max(...counts);
 
+  // Add circle markers for each site with dynamic radius and color
   for (let [siteCode, totalCount] of countMap.entries()) {
     const loc = locationMap.get(siteCode);
     if (loc && !isNaN(loc.lat) && !isNaN(loc.long)) {
@@ -125,13 +140,16 @@ function renderHeatmap(species, year) {
     }
   }
 
+  // Add heatmap layer to map
   heatLayer.addTo(map);
   console.log("Circle-based heatmap rendered with points:", heatLayer.getLayers().length);
 }
 
 function initHeatmap() {
+  // Initialize map and load data
   createMap();
 
+  // Load location data first
   loadCSV("https://caplter-birds-datasets.s3.us-west-1.amazonaws.com/cleaned_survey_locations.csv", locData => {
     locData.forEach(row => {
       locationMap.set(row.site_code.trim(), {
@@ -140,6 +158,7 @@ function initHeatmap() {
       });
     });
 
+    // Load observation data and render heatmap
     loadCSV("https://caplter-birds-datasets.s3.us-west-1.amazonaws.com/cleaned_observations.csv", obsData => {
       observationData = obsData;
 
@@ -148,8 +167,10 @@ function initHeatmap() {
       const speciesSelect = document.getElementById("heatmap-species-select");
       const yearSelect = document.getElementById("heatmap-year-select");
 
+      // Render initial heatmap
       renderHeatmap(speciesSelect.value, yearSelect.value);
 
+      // Update heatmap on dropdown changes
       speciesSelect.addEventListener("change", () => {
         renderHeatmap(speciesSelect.value, yearSelect.value);
       });
@@ -161,4 +182,5 @@ function initHeatmap() {
   });
 }
 
+// Start heatmap initialization on page load
 document.addEventListener("DOMContentLoaded", initHeatmap);

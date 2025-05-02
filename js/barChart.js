@@ -1,9 +1,11 @@
 import { loadCSV } from "./fetchData.js";
 import { populateDropdowns } from "./dropdowns.js";
 
+// Global array to store CSV data
 let globalData = [];
 
 function renderBarChart(species) {
+  // Extract unique years from survey dates
   const allYearsSet = new Set();
   globalData.forEach(row => {
     const year = new Date(row.survey_date).getFullYear();
@@ -12,8 +14,10 @@ function renderBarChart(species) {
 
   const allYears = [...allYearsSet].sort((a, b) => a - b);
 
+  // Filter data for the selected species
   const filtered = globalData.filter(row => row.common_name === species);
 
+  // Aggregate bird counts by year
   const countByYear = {};
   filtered.forEach(row => {
     const year = new Date(row.survey_date).getFullYear();
@@ -27,6 +31,7 @@ function renderBarChart(species) {
   const x = allYears;
   const y = allYears.map(year => countByYear[year] || 0);
 
+  // Define Plotly trace for bar chart
   const trace = {
     x,
     y,
@@ -34,6 +39,7 @@ function renderBarChart(species) {
     marker: { color: "#3498db" }
   };
 
+  // Configure Plotly layout for bar chart
   const layout = {
     title: {
       text: `Total Bird Counts for<br><b>"${species}"</b> Across Years`,
@@ -60,6 +66,7 @@ function renderBarChart(species) {
     bargap: 0.3
   };  
 
+  // Plotly config for interactivity
   const config = {
     displayModeBar: true,
     modeBarButtons: [['toImage']],
@@ -67,19 +74,24 @@ function renderBarChart(species) {
     responsive: true
   };
 
+  // Render the bar chart using Plotly
   Plotly.newPlot("bar-chart", [trace], layout, config);
 }
 
+// Initialize the bar chart on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadCSV("https://caplter-birds-datasets.s3.us-west-1.amazonaws.com/cleaned_observations.csv", function(data) {
     globalData = data;
 
+    // Populate species dropdown
     populateDropdowns(data);
 
     const speciesSelect = document.getElementById("species-select");
 
+    // Render initial bar chart with default species
     renderBarChart(speciesSelect.value);
 
+    // Update bar chart on species selection change
     speciesSelect.addEventListener("change", () => {
       renderBarChart(speciesSelect.value);
     });
