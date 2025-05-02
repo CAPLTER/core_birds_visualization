@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bird Survey Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="container">
+      <div class="flex-charts bar-chart-container">
+        <div class="chart-wrapper">
+          <h1>Bird Species Count</h1>
+          <div class="chart-box">
+            <div class="filters">
+              <select id="species-select"></select>
+            </div>
+            <div class="scroll-wrapper">
+              <div id="bar-chart"></div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="chart-wrapper">
+          <h1>Species Info</h1>
+          <div class="chart-box info-box">
+            <p id="species-info">Select a species to view its information.</p>
+          </div>
+        </div>
+      </div>
+    
+      <section class="heatmap-section">
+        <h1>Bird Survey Locations</h1>
+        <div class="filters">
+          <select id="heatmap-species-select"></select>
+          <select id="heatmap-year-select"></select>
+        </div>
+        <div id="heatmap-map" class="chart-box" style="height: 600px;"></div>
+      </section>
+    </div>
+
+  <script type="module" src="js/barChart.js"></script>
+  <script type="module" src="js/heatmap.js"></script>
+  <script type="module" src="js/speciesInfo.js"></script>
+</body>
+</html>
